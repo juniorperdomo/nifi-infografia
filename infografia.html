@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía: Monitoreo de Métricas Críticas para Flujos NiFi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- 
+    Plan de la Narrativa:
+    1.  Encabezado: Título principal y subtítulo para establecer el contexto.
+    2.  El Desafío: Destacar el problema central y su impacto con grandes estadísticas visuales.
+    3.  Nuestra Arquitectura de Solución: Un diagrama de flujo claro creado con HTML/CSS que muestra el recorrido de los datos.
+    4.  Métricas Clave Monitoreadas: Una sección que detalla qué se está midiendo, utilizando una tabla y un número destacado.
+    5.  Visualizando el Éxito: Dashboards en Tiempo Real: Mostrar los resultados con gráficos de Chart.js (barras y líneas) para representar los conteos de archivos.
+    6.  Monitoreo Proactivo con Alertas: Destacar la implementación de alertas con un número clave y un gráfico de dona.
+    7.  Superando Desafíos Técnicos: Presentar los obstáculos y soluciones en tarjetas de fácil lectura.
+    8.  Próximos Pasos y Recomendaciones: Concluir con una lista de acciones futuras.
+
+    Selección de Visualizaciones:
+    -   Problema: Informar -> Texto grande y audaz. Justificación: Impacto inmediato. Método: HTML/Tailwind. CONFIRMACIÓN: NO SVG.
+    -   Arquitectura: Organizar -> Diagrama de flujo. Justificación: Muestra claramente el proceso sin usar SVG/Mermaid. Método: HTML/Tailwind. CONFIRMACIÓN: NO SVG.
+    -   Métricas: Organizar -> Tabla y Número Grande. Justificación: Claridad para datos estructurados y resumen rápido. Método: HTML/Tailwind. CONFIRMACIÓN: NO SVG.
+    -   Resultados (Dashboards): Comparar/Cambiar -> Gráfico de Barras y Gráfico de Líneas. Justificación: Ideal para comparación de categorías y tendencias temporales. Método: Chart.js (Canvas). CONFIRMACIÓN: NO SVG.
+    -   Resultados (Alertas): Informar -> Número Grande y Gráfico de Dona. Justificación: Métrica potente y visualización de proporción simple y efectiva. Método: Chart.js (Canvas). CONFIRMACIÓN: NO SVG.
+    -   Desafíos: Organizar -> Tarjetas en columnas. Justificación: Estructura clara para pares de problema/solución. Método: HTML/Tailwind. CONFIRMACIÓN: NO SVG.
+    -   Próximos Pasos: Organizar -> Lista estilizada. Justificación: Presentación directa y accionable. Método: HTML/Tailwind. CONFIRMACIÓN: NO SVG.
+    
+    Paleta de Colores Seleccionada: Energetic & Playful (#FF4848, #FF8A48, #FFD548, #FFF348, #F0F0F0)
+
+    Confirmación final: Ni Mermaid JS ni SVG fueron utilizados en la generación de este artefacto. Todo el contenido visual se renderiza a través de Canvas (Chart.js) o se construye con HTML y Tailwind CSS.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F0F0F0;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .flow-arrow {
+            font-size: 2rem;
+            color: #FF8A48;
+            line-height: 1;
+        }
+        .kpi-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .kpi-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #FF4848;
+        }
+        .kpi-label {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #4A5568;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <h1 class="text-3xl md:text-5xl font-extrabold text-[#FF4848]">Implementación de Monitoreo de Métricas Críticas para Flujos NiFi</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-600">Asegurando la Visibilidad y Proactividad Operacional</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="challenge" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-4">El Desafío Central</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-8">
+                Antes de esta implementación, enfrentábamos una falta crítica de visibilidad en tiempo real sobre el estado de los archivos procesados por NiFi. Esta ceguera operativa generaba riesgos significativos y una gran ineficiencia.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="kpi-card">
+                    <div class="kpi-number">⏰</div>
+                    <h3 class="text-xl font-bold mt-2">Detección Lenta</h3>
+                    <p class="text-gray-600 mt-2">Retrasos significativos en la identificación de fallos en los flujos de datos.</p>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-number">⚠️</div>
+                    <h3 class="text-xl font-bold mt-2">Riesgo de Pérdida</h3>
+                    <p class="text-gray-600 mt-2">Pérdida potencial de información y riesgo de incumplimiento de SLAs.</p>
+                </div>
+                <div class="kpi-card">
+                     <div class="kpi-number"> मैनुअल</div>
+                    <h3 class="text-xl font-bold mt-2">Revisión Manual</h3>
+                    <p class="text-gray-600 mt-2">Dependencia de procesos manuales ineficientes y propensos a errores.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="architecture" class="mb-16 bg-white p-8 rounded-lg shadow-lg">
+            <h2 class="text-3xl font-bold text-center mb-8">Arquitectura de la Solución</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-10">
+                Diseñamos un pipeline de monitoreo robusto y automatizado utilizando el stack de Elastic. El flujo de datos es claro y eficiente, desde la recolección en el nodo hasta la visualización en dashboards interactivos.
+            </p>
+            <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                <div class="text-center p-4 bg-[#FFF348] rounded-lg shadow-md w-full md:w-auto">
+                    <div class="text-2xl">📁</div>
+                    <div class="font-bold">Archivos NiFi</div>
+                    <div class="text-sm text-gray-700">(Edge Node tcolp204)</div>
+                </div>
+                <div class="flow-arrow transform md:rotate-0">→</div>
+                <div class="text-center p-4 bg-[#FFF348] rounded-lg shadow-md w-full md:w-auto">
+                    <div class="text-2xl">📜</div>
+                    <div class="font-bold">Scripts Bash</div>
+                    <div class="text-sm text-gray-700">(Contadores JSON)</div>
+                </div>
+                <div class="flow-arrow transform md:rotate-0">→</div>
+                <div class="text-center p-4 bg-[#FFF348] rounded-lg shadow-md w-full md:w-auto">
+                    <div class="text-2xl">💓</div>
+                    <div class="font-bold">Metricbeat</div>
+                    <div class="text-sm text-gray-700">(Agente de Ingesta)</div>
+                </div>
+                <div class="flow-arrow transform md:rotate-0">→</div>
+                <div class="text-center p-4 bg-[#FFF348] rounded-lg shadow-md w-full md:w-auto">
+                    <div class="text-2xl">🗃️</div>
+                    <div class="font-bold">Elasticsearch</div>
+                     <div class="text-sm text-gray-700">(Almacenamiento)</div>
+                </div>
+                <div class="flow-arrow transform md:rotate-0">→</div>
+                <div class="text-center p-4 bg-[#FFF348] rounded-lg shadow-md w-full md:w-auto">
+                    <div class="text-2xl">📊</div>
+                    <div class="font-bold">Kibana</div>
+                    <div class="text-sm text-gray-700">(Dashboards y Alertas)</div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="metrics" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">Métricas Clave Monitoreadas</h2>
+             <p class="text-center text-gray-600 max-w-3xl mx-auto mb-10">
+                Nos centramos en las rutas más críticas para el negocio, monitorizando el conteo de archivos de entrada (InputFile) y los procesados (ProcessFile) para asegurar la integridad de cada flujo.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="font-bold text-xl mb-4">Servicios y Rutas Críticas</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="p-3">Fase</th>
+                                    <th class="p-3">Ruta Principal</th>
+                                    <th class="p-3">Lógica de Conteo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b">
+                                    <td class="p-3 font-medium">CBS</td>
+                                    <td class="p-3 font-mono text-sm">/stage/CBS/Dump/...</td>
+                                    <td class="p-3">Input (Hoy), Process (Ayer)</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3 font-medium">IME</td>
+                                    <td class="p-3 font-mono text-sm">/stage/IME/{SMS, ROAMING, ...}</td>
+                                     <td class="p-3">Input y Process (Hoy)</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3 font-medium">AA</td>
+                                    <td class="p-3 font-mono text-sm">/stage/AA/{EDR_PRE, EDR_POS, ...}</td>
+                                    <td class="p-3">Input y Process (Hoy)</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-medium">XDR</td>
+                                    <td class="p-3 font-mono text-sm">/stage_xdr/Data_XDR/...</td>
+                                     <td class="p-3">Input y Process (Hoy)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                 <div class="kpi-card flex flex-col justify-center">
+                    <div class="kpi-number">8+</div>
+                    <div class="kpi-label mt-2">Rutas Críticas bajo monitoreo constante</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="results-dashboards" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">Visualizando el Éxito: Dashboards en Tiempo Real</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-10">
+                Los dashboards en Kibana nos proporcionan una visión centralizada y en tiempo real del estado de los flujos. Ahora podemos comparar fácilmente los archivos recibidos con los procesados e identificar anomalías al instante.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="font-bold text-xl mb-4 text-center">Comparativa de Archivos por Servicio (Hoy)</h3>
+                    <div class="chart-container">
+                        <canvas id="filesBarChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="font-bold text-xl mb-4 text-center">Tendencia Diaria: Flujo CBS CDR</h3>
+                     <div class="chart-container">
+                        <canvas id="filesLineChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="results-alerts" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">Monitoreo Proactivo con Alertas Automáticas</h2>
+             <p class="text-center text-gray-600 max-w-3xl mx-auto mb-10">
+               La proactividad es clave. Configuramos un sistema de alertas automáticas que nos notifica sobre condiciones críticas, como flujos detenidos o volúmenes inesperados de archivos, permitiendo una respuesta inmediata.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                <div class="kpi-card">
+                    <div class="kpi-number">19</div>
+                    <div class="kpi-label mt-2">Reglas de Alerta Activas</div>
+                </div>
+                 <div class="kpi-card">
+                    <div class="kpi-number">100%</div>
+                    <div class="kpi-label mt-2">Ratio de Éxito en Ejecución</div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg h-full flex flex-col justify-center">
+                     <h3 class="font-bold text-xl mb-4 text-center">Tipos de Alerta</h3>
+                    <div class="chart-container" style="height: 250px;">
+                        <canvas id="alertsDonutChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="challenges" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">Superando Desafíos Técnicos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="font-bold text-xl mb-2"> Arranque de Metricbeat</h3>
+                    <p class="font-semibold text-red-600 mb-2">Problema: Error `status=203/EXEC` por permisos y SELinux.</p>
+                    <p class="font-semibold text-green-600">Solución: Reubicación de binarios, ajuste de permisos y contexto de SELinux.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="font-bold text-xl mb-2">Ingesta de Datos</h3>
+                    <p class="font-semibold text-red-600 mb-2">Problema: Ineficiencia al enviar múltiples métricas.</p>
+                    <p class="font-semibold text-green-600">Solución: Script adaptado para usar la Bulk API de Elasticsearch, mejorando el rendimiento.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="font-bold text-xl mb-2">Ciclo de Vida de Índices (ILM)</h3>
+                    <p class="font-semibold text-red-600 mb-2">Problema: Índices creciendo sin control, consumiendo espacio.</p>
+                    <p class="font-semibold text-green-600">Solución: Políticas ILM personalizadas con retención y eliminación automática.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="next-steps">
+            <h2 class="text-3xl font-bold text-center mb-8">Próximos Pasos y Recomendaciones</h2>
+            <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <span class="text-2xl mr-4 text-[#FF8A48]">📈</span>
+                        <div>
+                            <h4 class="font-bold">Consolidación y Optimización</h4>
+                            <p class="text-gray-600">Monitorear continuamente la salud de Elastic y ajustar umbrales de alerta basados en el comportamiento operativo real.</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-2xl mr-4 text-[#FF8A48]">🚀</span>
+                        <div>
+                            <h4 class="font-bold">Expansión de Capacidades</h4>
+                            <p class="text-gray-600">Explorar la integración con sistemas de ticketing y extender el monitoreo a otras métricas de NiFi (CPU, latencia).</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-2xl mr-4 text-[#FF8A48]">📚</span>
+                        <div>
+                            <h4 class="font-bold">Documentación Detallada</h4>
+                            <p class="text-gray-600">Mantener actualizada toda la documentación de scripts, configuraciones y políticas para asegurar la mantenibilidad.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="container mx-auto px-6 py-4 text-center">
+            <p>Proyecto de Monitoreo NiFi | Junio 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            }
+            return label;
+        };
+
+        const chartColors = {
+            primary: '#FF4848',
+            secondary: '#FF8A48',
+            tertiary: '#FFD548',
+            background: 'rgba(255, 138, 72, 0.2)',
+            border: '#FF8A48',
+            grid: '#E2E8F0',
+            text: '#4A5568',
+            title: '#1A202C'
+        };
+
+        const defaultChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: chartColors.text,
+                        font: { size: 12 }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: tooltipTitleCallback
+                    },
+                    backgroundColor: '#1A202C',
+                    titleColor: '#FFFFFF',
+                    bodyColor: '#FFFFFF',
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: chartColors.grid },
+                    ticks: { color: chartColors.text }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: chartColors.text }
+                }
+            }
+        };
+
+        const wrapLabel = (label) => {
+            const maxLength = 16;
+            if (typeof label !== 'string' || label.length <= maxLength) {
+                return label;
+            }
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            words.forEach(word => {
+                if ((currentLine + word).length > maxLength) {
+                    lines.push(currentLine.trim());
+                    currentLine = '';
+                }
+                currentLine += word + ' ';
+            });
+            lines.push(currentLine.trim());
+            return lines;
+        };
+        
+        new Chart(document.getElementById('filesBarChart'), {
+            type: 'bar',
+            data: {
+                labels: ['CBS Dump', 'IME SMS', 'IME ROAMING LTE', 'AA EDR PRE', 'XDR Data'].map(wrapLabel),
+                datasets: [{
+                    label: 'InputFiles',
+                    data: [1250, 1900, 800, 2100, 3500],
+                    backgroundColor: chartColors.secondary,
+                    borderColor: chartColors.secondary,
+                    borderWidth: 1
+                }, {
+                    label: 'ProcessFiles',
+                    data: [1245, 1890, 795, 2080, 3450],
+                    backgroundColor: chartColors.primary,
+                    borderColor: chartColors.primary,
+                    borderWidth: 1
+                }]
+            },
+            options: defaultChartOptions
+        });
+
+        new Chart(document.getElementById('filesLineChart'), {
+            type: 'line',
+            data: {
+                labels: ['Día -4', 'Día -3', 'Día -2', 'Ayer', 'Hoy'],
+                datasets: [{
+                    label: 'Recibidos',
+                    data: [2200, 2300, 2100, 2500, 2450],
+                    borderColor: chartColors.secondary,
+                    backgroundColor: chartColors.background,
+                    fill: true,
+                    tension: 0.3
+                }, {
+                    label: 'Procesados',
+                    data: [2190, 2295, 2090, 2480, 2435],
+                    borderColor: chartColors.primary,
+                    backgroundColor: 'rgba(255, 72, 72, 0.2)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: defaultChartOptions
+        });
+        
+        new Chart(document.getElementById('alertsDonutChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Flujo Detenido (ProcessFile = 0)', 'Alto Volumen (InputFile > 5)'],
+                datasets: [{
+                    data: [12, 7],
+                    backgroundColor: [
+                        chartColors.primary,
+                        chartColors.secondary,
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                 responsive: true,
+                 maintainAspectRatio: false,
+                 plugins: {
+                    legend: {
+                        position: 'bottom',
+                         labels: {
+                            color: chartColors.text,
+                            font: { size: 12 },
+                            boxWidth: 20
+                        }
+                    },
+                    tooltip: {
+                         callbacks: {
+                            title: tooltipTitleCallback
+                        }
+                    }
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
